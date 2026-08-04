@@ -16,9 +16,23 @@ test("server-renders the MAHAN agency experience", async () => {
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
-  assert.match(html, /<title>MAHAN — Independent Creative Studio<\/title>/i);
+  assert.match(html, /<title>MAHAN — Brand, Space &amp; Digital, from one studio in Shiraz<\/title>/i);
   assert.match(html, /An independent studio/);
   assert.match(html, /Selected work/);
   assert.match(html, /studio@mahan\.agency/);
   assert.doesNotMatch(html, /codex-preview|Building your site|react-loading-skeleton/i);
+});
+
+test("server-renders headings already in register, so no-JS reads finished type", async () => {
+  const html = await (await render()).text();
+  // The storm is a progressive enhancement: the scatter class must never ship
+  // in the server response, or a JS-less or background-tab visitor is left
+  // looking at unreadable type.
+  assert.doesNotMatch(html, /class="[^"]*\barmed\b/);
+  assert.match(html, /aria-label="MAHAN"/);
+});
+
+test("carries its direction contract into the built output", async () => {
+  const html = await (await render()).text();
+  assert.match(html, /IMPECCABLE DIRECTION CONTRACT/);
 });

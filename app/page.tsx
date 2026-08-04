@@ -1,73 +1,434 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, type CSSProperties } from "react";
 
-const projects = [
-  { number: "01", name: "Noura Objects", category: "Identity / Digital", year: "2026", image: "https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=1100&q=85" },
-  { number: "02", name: "Ava House", category: "Hospitality / Strategy", year: "2025", image: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1100&q=85" },
-  { number: "03", name: "Orion Editions", category: "Editorial / E-commerce", year: "2025", image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=1100&q=85" },
-  { number: "04", name: "Lila / 23", category: "Culture / Campaign", year: "2024", image: "https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?auto=format&fit=crop&w=1100&q=85" },
+/* ===========================================================================
+   REPLACE BEFORE LAUNCH — everything in this block is placeholder.
+   Anything rendered inside <Tbd> carries a dashed outline on the page, so an
+   unfinished value can never be mistaken for a finished one.
+
+     1. PROJECTS      — the four featured projects: name, discipline, year.
+     2. CLIENT_WORK   — the wider body of client work.
+     3. CONTACT       — real studio email, phone, WhatsApp number, Instagram.
+
+   Fill a value in and drop its `tbd` flag. Nothing else needs to move.
+
+   ALSO OUTSIDE THIS FILE, still unreplaced starter assets:
+     - public/og.png      1.79 MB, 1731x909, declared as 1200x630 in
+                          app/layout.tsx. This is the first thing anyone sees
+                          when the site is shared into Instagram or WhatsApp.
+                          Needs an authored 1200x630 MAHAN image under ~150 KB.
+     - public/favicon.svg replaced with a MAHAN mark, but revisit if the
+                          wordmark is ever redrawn.
+   =========================================================================== */
+
+type Project = { name: string; discipline: string; year: string; tbd?: boolean };
+
+const PROJECTS: Project[] = [
+  { name: "Project one", discipline: "Brand", year: "Year", tbd: true },
+  { name: "Project two", discipline: "Space", year: "Year", tbd: true },
+  { name: "Project three", discipline: "Digital", year: "Year", tbd: true },
+  { name: "Project four", discipline: "Brand, Space", year: "Year", tbd: true },
 ];
 
+const CLIENT_WORK = [
+  { name: "Client", discipline: "Brand" },
+  { name: "Client", discipline: "Digital" },
+  { name: "Client", discipline: "Space" },
+  { name: "Client", discipline: "Brand" },
+  { name: "Client", discipline: "Digital" },
+  { name: "Client", discipline: "Brand" },
+  { name: "Client", discipline: "Space" },
+  { name: "Client", discipline: "Digital" },
+  { name: "Client", discipline: "Brand" },
+  { name: "Client", discipline: "Space" },
+];
+
+const CONTACT = {
+  email: "studio@mahan.agency",
+  phoneLabel: "+98 71 0000 0000",
+  phoneHref: "tel:+987100000000",
+  whatsappHref: "https://wa.me/000000000000",
+  instagramHref: "https://instagram.com/",
+  tbd: true,
+};
+
+const DISCIPLINES = [
+  {
+    key: "Brand",
+    body: "Strategy, naming, identity systems and art direction — the argument a brand makes before anyone has walked in or clicked anything.",
+  },
+  {
+    key: "Space",
+    body: "Interiors, environments and signage. What a brand feels like at arm's length, in daylight, standing up.",
+  },
+  {
+    key: "Digital",
+    body: "Websites, commerce and digital products, built by the same people who drew the mark — so the screen agrees with the room.",
+  },
+];
+
+/* The studio band argues how the three disciplines run together. It must not
+   restate the discipline definitions above it — the same copy twice reads as
+   a paste, not an argument. */
+const STUDIO_NOTES = [
+  {
+    key: "In one order",
+    body: "The identity settles first, the room is drawn against it, and the screen is built last, because by then there is something true to build from.",
+  },
+  {
+    key: "No handoff",
+    body: "The people who draw the mark specify the room and write the site. Nothing has to survive translation between three suppliers who have never met.",
+  },
+  {
+    key: "Judged in use",
+    body: "The test is not the presentation. It is the room at seven in the evening and the site on a three-year-old phone.",
+  },
+];
+
+/* Deterministic scatter: identical on server and client, so the storm can
+   never cause a hydration mismatch. Deliberately small — the word should
+   shiver into place, not explode. Anything larger and the page is unreadable
+   for a second every time a band enters the viewport. */
+function scatter(seed: string, i: number) {
+  let h = 0;
+  for (let k = 0; k < seed.length; k++) h = (h * 31 + seed.charCodeAt(k)) | 0;
+  h = (h + i * 2654435761) | 0;
+  const a = Math.abs(h);
+  return {
+    tx: ((a % 56) - 28) / 100,
+    ty: (((a >> 7) % 48) - 24) / 100,
+    r: ((a >> 13) % 16) - 8,
+  };
+}
+
+/* Letters are aria-hidden; the accessible name comes from an aria-label on the
+   surrounding heading, so a screen reader gets the word once and never spells
+   it out. Words are wrapped individually because inline-block letters would
+   otherwise let the browser break "you're" across two lines. */
+function Condense({ text }: { text: string }) {
+  const words = text.split(" ");
+  let n = 0;
+  return (
+    <span className="cond" aria-hidden="true">
+      {words.map((word, wi) => {
+        const letters = Array.from(word).map((ch) => {
+          const i = n++;
+          const { tx, ty, r } = scatter(text, i);
+          const style = {
+            "--tx": `${tx.toFixed(2)}em`,
+            "--ty": `${ty.toFixed(2)}em`,
+            "--r": `${r}deg`,
+            "--i": Math.min(i, 12),
+          } as CSSProperties;
+          return (
+            <i key={i} style={style}>
+              {ch}
+            </i>
+          );
+        });
+        return (
+          <Fragment key={wi}>
+            {wi > 0 ? " " : null}
+            <span className="cond-w">{letters}</span>
+          </Fragment>
+        );
+      })}
+    </span>
+  );
+}
+
+/* Spent grammar — what the storm leaves behind once a word has landed. */
+function Flecks({ seed, count = 8 }: { seed: string; count?: number }) {
+  return (
+    <span className="flecks" aria-hidden="true">
+      {Array.from({ length: count }).map((_, i) => {
+        const { tx, ty, r } = scatter(seed, i + 97);
+        const style = {
+          "--x": `${(50 + tx * 155).toFixed(1)}%`,
+          "--y": `${(50 + ty * 170).toFixed(1)}%`,
+          "--s": `${3 + (i % 4) * 2}px`,
+          "--r": `${r * 3}deg`,
+          "--i": i,
+        } as CSSProperties;
+        return <i className="fleck" key={i} style={style} />;
+      })}
+    </span>
+  );
+}
+
+function Tbd({ children }: { children: React.ReactNode }) {
+  return <span className="tbd">{children}</span>;
+}
+
 export default function Home() {
-  const [active, setActive] = useState(0);
-  const [progress, setProgress] = useState(0);
+  const bands = useRef<HTMLElement[]>([]);
 
   useEffect(() => {
-    const update = () => setProgress(Math.round((window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100) || 0);
-    update(); window.addEventListener("scroll", update, { passive: true });
-    return () => window.removeEventListener("scroll", update);
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // Never arm in a background tab: IntersectionObserver delivery is
+    // suspended there, so a link opened from Instagram's in-app browser would
+    // otherwise sit on permanently scattered, unreadable headings.
+    if (document.visibilityState !== "visible") return;
+
+    const nodes = bands.current.filter(Boolean);
+    const fold = window.innerHeight * 0.9;
+
+    // Anything already on screen stays settled — arming it would snap the
+    // server-rendered word apart and then re-condense it, which reads as a
+    // glitch rather than an entrance.
+    const offscreen = nodes.filter((n) => n.getBoundingClientRect().top > fold);
+    offscreen.forEach((n) => n.classList.add("armed"));
+
+    const settleAll = () => offscreen.forEach((n) => n.classList.add("settled"));
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("settled");
+            io.unobserve(e.target);
+          }
+        });
+      },
+      { rootMargin: "0px 0px -10% 0px", threshold: 0.1 },
+    );
+
+    offscreen.forEach((n) => io.observe(n));
+
+    // If the tab is hidden mid-scroll, settle everything so returning to it
+    // never reveals type frozen in flight.
+    const onVisibility = () => {
+      if (document.visibilityState === "hidden") settleAll();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+
+    // Last resort: if the observer never delivers, the page must still read.
+    const failsafe = window.setTimeout(settleAll, 6000);
+
+    return () => {
+      io.disconnect();
+      document.removeEventListener("visibilitychange", onVisibility);
+      window.clearTimeout(failsafe);
+    };
   }, []);
 
+  const collect = (el: HTMLElement | null) => {
+    if (el && !bands.current.includes(el)) bands.current.push(el);
+  };
+
   return (
-    <main>
-      <header className="site-header">
-        <a className="wordmark" href="#top" aria-label="MAHAN home">MAHAN<span>®</span></a>
-        <nav aria-label="Primary navigation">
-          <a href="#work">Work</a><a href="#studio">Studio</a><a href="#contact">Contact</a>
+    <>
+      <a className="skip" href="#work">
+        Skip to the work
+      </a>
+
+      <header className="masthead">
+        <a className="masthead__wordmark" href="#top" aria-label="MAHAN — home">
+          MAHAN
+        </a>
+        <nav className="masthead__nav" aria-label="Primary">
+          <a className="masthead__link" href="#work">Work</a>
+          <a className="masthead__link" href="#studio">Studio</a>
+          <a className="stamp stamp--filled" href="#contact">Start a project</a>
         </nav>
       </header>
 
-      <section className="hero" id="top">
-        <div className="hero-meta meta"><span>Independent creative studio</span><span>Shiraz — 2026</span></div>
-        <h1>An independent studio<br />for brands that refuse<br />to <em>blend in.</em></h1>
-        <div className="hero-bottom"><span className="meta">Scroll to explore</span><span className="scroll-line"><i style={{ width: `${progress}%` }} /></span><span className="meta">{String(progress).padStart(2, "0")}%</span></div>
-      </section>
+      <main id="top">
+        {/* ---------------------------------------------------------- HERO */}
+        <section
+          className="band band--tall field-storm"
+          ref={collect}
+          aria-labelledby="hero-title"
+        >
+          <Flecks seed="mahan-hero" />
 
-      <section className="work section" id="work">
-        <div className="section-kicker"><span className="meta">Selected work</span><span className="meta">04 — 24</span></div>
-        <div className="work-list">
-          {projects.map((project, index) => (
-            <a href="#case-study" className={`project-row ${active === index ? "is-active" : ""}`} onMouseEnter={() => setActive(index)} onFocus={() => setActive(index)} key={project.number}>
-              <span className="project-number">{project.number}</span><span className="project-title">{project.name}</span><span className="project-category meta">{project.category}</span><span className="project-year meta">{project.year}</span>
+          <div className="hero-content">
+            <h1 id="hero-title" className="display hero__wordmark" aria-label="MAHAN">
+              <Condense text="MAHAN" />
+            </h1>
+            <p className="display hero__headline">
+              An independent studio for brands that refuse to blend in.
+            </p>
+          </div>
+
+          <div className="hero__credit hero-content">
+            <span className="mark hero__origin">
+              Shiraz, Fars — brand, space &amp; digital
+            </span>
+            <a className="stamp" href={CONTACT.whatsappHref}>
+              {CONTACT.tbd ? <Tbd>WhatsApp</Tbd> : "WhatsApp"}
+            </a>
+            <a className="stamp" href={CONTACT.phoneHref}>Phone</a>
+            <a className="stamp" href={`mailto:${CONTACT.email}`}>Email</a>
+          </div>
+        </section>
+
+        {/* ------------------------------------------------------- IMPRINT */}
+        <section className="band field-cyan" ref={collect} aria-labelledby="imprint-title">
+          <h2
+            id="imprint-title"
+            className="display imprint__lede"
+            aria-label="One storm. Three words."
+          >
+            <Condense text="One storm." /> <Condense text="Three words." />
+          </h2>
+
+          <div className="weather">
+            {DISCIPLINES.map((d) => (
+              <div key={d.key}>
+                <h3 className="display">{d.key}</h3>
+                <p className="prose">{d.body}</p>
+              </div>
+            ))}
+          </div>
+
+          <p className="imprint__note">
+            Most studios can give you one of these. Commission three of them from
+            three suppliers and you get three different weathers. We run all
+            three, so they arrive as one.
+          </p>
+        </section>
+
+        {/* ---------------------------------------------------------- WORK */}
+        <section id="work" className="field-storm" aria-labelledby="work-title">
+          <div className="work__head">
+            <h2 id="work-title" className="display" style={{ fontSize: "clamp(34px, 5vw, 68px)" }}>
+              Selected work
+            </h2>
+            <span className="mark">Four projects</span>
+          </div>
+
+          {PROJECTS.map((project) => (
+            <a
+              className="project"
+              href="#contact"
+              key={project.name}
+              ref={collect}
+              aria-label={`${project.name} — ${project.discipline}, ${project.year}${
+                project.tbd ? " (details to supply)" : ""
+              }`}
+            >
+              <span className="project__wash" aria-hidden="true" />
+              <span>
+                <span className="display project__name">
+                  <Condense text={project.name} />
+                </span>
+                <span className="project__meta">
+                  <span className="mark">{project.discipline}</span>
+                  <span className="mark">{project.year}</span>
+                  {project.tbd ? (
+                    <span className="mark">
+                      <Tbd>To supply</Tbd>
+                    </span>
+                  ) : null}
+                </span>
+              </span>
+              <span className="project__go" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path
+                    d="M4 10h12M11 5l5 5-5 5"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="square"
+                  />
+                </svg>
+              </span>
             </a>
           ))}
-        </div>
-        <aside className="project-preview" aria-live="polite"><img src={projects[active].image} alt="" /><span className="meta">{projects[active].name}</span></aside>
-      </section>
+        </section>
 
-      <section className="case-study" id="case-study">
-        <div className="case-intro section">
-          <div className="case-label meta">Case study — 01</div>
-          <h2>Noura<br /><em>Objects</em></h2>
-          <div className="case-metadata meta"><span><b>Client</b>Noura Objects</span><span><b>Services</b>Strategy, Identity, Digital</span><span><b>Year</b>2026</span></div>
-        </div>
-        <figure className="wide-image"><img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=2400&q=90" alt="Noura Objects interior campaign" /></figure>
-        <div className="brief section"><span className="meta">The brief</span><p>To build an identity for a furniture house that treats domestic objects as quiet, enduring characters. A system made to leave room for material, shadow and the life around it.</p></div>
-        <div className="image-pair section"><img src="https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?auto=format&fit=crop&w=1100&q=85" alt="Minimal seating" /><img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1100&q=85" alt="Sculptural interior" /></div>
-        <blockquote>Space is the most<br />generous material.</blockquote>
-        <a className="next-project" href="#work"><span className="meta">Next project</span><strong>Ava House</strong><span className="arrow">↘</span></a>
-      </section>
+        {/* --------------------------------------------------- PRECIPITATION */}
+        <section className="band field-pale" ref={collect} aria-labelledby="precip-title">
+          <div className="precip__head">
+            <h2
+              id="precip-title"
+              className="display"
+              style={{ fontSize: "clamp(30px, 4.4vw, 58px)" }}
+              aria-label="What else has landed"
+            >
+              <Condense text="What else has landed" />
+            </h2>
+            <p className="mark" style={{ maxInlineSize: "32ch" }}>
+              Shorter engagements, ongoing clients, and work that never needed a
+              case study.
+            </p>
+          </div>
 
-      <section className="studio section" id="studio">
-        <div className="section-kicker"><span className="meta">The studio</span><span className="meta">Founded in Shiraz</span></div>
-        <p className="studio-statement">MAHAN is a creative practice for people with a point of view. We shape identities, spaces and digital worlds with equal parts precision and <em>feeling.</em></p>
-        <div className="services"><div><span className="meta">01 / Brand</span><p>Strategy<br />Identity systems<br />Art direction</p></div><div><span className="meta">02 / Digital</span><p>Websites<br />E-commerce<br />Digital products</p></div><div><span className="meta">03 / Culture</span><p>Campaigns<br />Editorial<br />Experiences</p></div></div>
-        <div className="team"><div className="team-heading"><span className="meta">A small, deliberate team</span><span className="meta">Shiraz / Everywhere</span></div><div className="team-grid">{[["https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80","Mahan Y.","Creative Direction"],["https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=600&q=80","Sara K.","Design Direction"],["https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=600&q=80","Arman R.","Technology"]].map(([image,name,role]) => <figure key={name}><img src={image} alt={name} /><figcaption>{name}<span className="meta">{role}</span></figcaption></figure>)}</div></div>
-      </section>
+          <div className="precip__field">
+            {CLIENT_WORK.map((c, i) => (
+              <span className="precip__drop" key={i}>
+                <Tbd>{c.name}</Tbd>
+                <span>{c.discipline}</span>
+              </span>
+            ))}
+            <a className="precip__drop precip__drop--open" href="#contact">
+              Room for yours
+              <span>Open</span>
+            </a>
+          </div>
+        </section>
 
-      <section className="contact section" id="contact"><div className="section-kicker"><span className="meta">New business / General enquiries</span><span className="meta">Let&apos;s begin</span></div><a className="email" href="mailto:studio@mahan.agency">studio@mahan.agency</a><div className="contact-bottom"><div><span className="meta">Shiraz office</span><a href="tel:+987132323232">+98 71 3232 3232</a></div><div><span className="meta">Social</span><a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram ↗</a></div></div></section>
-      <footer><a className="wordmark" href="#top">MAHAN<span>®</span></a><span className="meta">© 2026 Mahan Creative Studio</span><a className="meta" href="#top">Back to top ↑</a></footer>
-    </main>
+        {/* -------------------------------------------------------- STUDIO */}
+        <section id="studio" className="band field-ink" ref={collect} aria-labelledby="studio-title">
+          <h2 id="studio-title" className="display studio__statement">
+            A small studio in Shiraz that would rather do three things for one
+            client than one thing for thirty.
+          </h2>
+
+          <div className="studio__cols">
+            {STUDIO_NOTES.map((n) => (
+              <div key={n.key}>
+                <h3>{n.key}</h3>
+                <p>{n.body}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ------------------------------------------------------- CONTACT */}
+        <section id="contact" className="band field-cyan" ref={collect} aria-labelledby="contact-title">
+          <h2
+            id="contact-title"
+            className="display contact__lede"
+            aria-label="Tell us what you're building."
+          >
+            <Condense text="Tell us what you're building." />
+          </h2>
+
+          <div className="contact__channels">
+            <a className="stamp stamp--filled" href={CONTACT.whatsappHref}>
+              {CONTACT.tbd ? <Tbd>WhatsApp</Tbd> : "WhatsApp"}
+            </a>
+            <a className="stamp" href={CONTACT.phoneHref}>
+              {CONTACT.tbd ? <Tbd>{CONTACT.phoneLabel}</Tbd> : CONTACT.phoneLabel}
+            </a>
+            <a className="stamp" href={`mailto:${CONTACT.email}`}>
+              {CONTACT.tbd ? <Tbd>{CONTACT.email}</Tbd> : CONTACT.email}
+            </a>
+          </div>
+
+          <p className="prose" style={{ marginBlockStart: "26px" }}>
+            Send the shape of it — the brand, the room, the site, or all three.
+            Every enquiry is answered by the people who would do the work.
+          </p>
+
+          <div className="contact__detail">
+            <span className="mark" style={{ alignSelf: "center" }}>
+              Shiraz, Fars — working everywhere
+            </span>
+            <a href={CONTACT.instagramHref} rel="noreferrer">
+              {CONTACT.tbd ? <Tbd>Instagram</Tbd> : "Instagram"}
+            </a>
+          </div>
+        </section>
+      </main>
+
+      <footer className="colophon field-ink">
+        <a className="masthead__wordmark" href="#top">MAHAN</a>
+        <span className="mark">© 2026 MAHAN Creative Studio</span>
+        <a className="mark" href="#top">Back to top</a>
+      </footer>
+    </>
   );
 }
