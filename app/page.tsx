@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useEffect, useRef, useState, type CSSProperties } from "react";
+import { Fragment, useEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react";
 import { clientWork, contact, disciplines, projects, studioNotes } from "./content";
 
 /* ===========================================================================
@@ -156,6 +156,16 @@ export default function Home() {
 
   const collect = (el: HTMLElement | null) => {
     if (el && !bands.current.includes(el)) bands.current.push(el);
+  };
+
+  // Keep ordinary anchor navigation immediate for keyboard users. This is the
+  // one deliberate long-distance transition on the page.
+  const scrollToTop = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? "auto"
+      : "smooth";
+    window.scrollTo({ top: 0, behavior });
   };
 
   return (
@@ -353,7 +363,7 @@ export default function Home() {
           <img className="brand-logo" src="/mahan-logo.svg" alt="" />
         </a>
         <span className="mark">© 2026 MAHAN Creative Studio</span>
-        <a className="mark" href="#top">Back to top</a>
+        <a className="mark" href="#top" onClick={scrollToTop}>Back to top</a>
       </footer>
     </>
   );

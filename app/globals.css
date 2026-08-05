@@ -405,17 +405,18 @@ img { max-inline-size: 100%; display: block; }
   block-size: auto;
 }
 
-/* One rare, explanatory entrance: the actual mark lands first, followed by
-   the promise and the action. No motion is attached to regular navigation. */
+/* One rare, explanatory entrance: the actual mark is revealed as a single
+   editorial gesture, then the promise and action quietly follow. No motion is
+   attached to regular navigation. */
 @media (prefers-reduced-motion: no-preference) {
-  .hero__logo { animation: hero-mark-in 0.52s var(--settle) both; }
-  .hero__headline { animation: hero-copy-in 0.42s var(--settle) 0.05s both; }
-  .hero__credit { animation: hero-copy-in 0.36s var(--settle) 0.1s both; }
+  .hero__wordmark { animation: hero-mark-reveal 0.72s var(--settle) both; }
+  .hero__headline { animation: hero-copy-in 0.42s var(--settle) 0.22s both; }
+  .hero__credit { animation: hero-copy-in 0.36s var(--settle) 0.34s both; }
 }
 
-@keyframes hero-mark-in {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes hero-mark-reveal {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
 }
 
 @keyframes hero-copy-in {
