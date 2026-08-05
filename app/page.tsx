@@ -81,6 +81,8 @@ function Tbd({ children }: { children: React.ReactNode }) {
 
 export default function Home() {
   const bands = useRef<HTMLElement[]>([]);
+  const topScrollFrame = useRef<number | null>(null);
+  const topScrollCancel = useRef<(() => void) | null>(null);
   const [hasScrolled, setHasScrolled] = useState(false);
 
   useEffect(() => {
@@ -162,10 +164,43 @@ export default function Home() {
   // one deliberate long-distance transition on the page.
   const scrollToTop = (event: MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
-    const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches
-      ? "auto"
-      : "smooth";
-    window.scrollTo({ top: 0, behavior });
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      window.scrollTo({ top: 0, behavior: "auto" });
+      return;
+    }
+
+    topScrollCancel.current?.();
+
+    const start = window.scrollY;
+    const duration = Math.min(1150, Math.max(680, start * 0.18));
+    const startedAt = performance.now();
+    let interrupted = false;
+    const interrupt = () => { interrupted = true; };
+    const interruptionEvents: Array<keyof WindowEventMap> = ["wheel", "touchstart", "pointerdown", "keydown"];
+    interruptionEvents.forEach((type) => window.addEventListener(type, interrupt, { once: true, passive: true }));
+
+    const finish = () => {
+      interruptionEvents.forEach((type) => window.removeEventListener(type, interrupt));
+      topScrollFrame.current = null;
+      topScrollCancel.current = null;
+    };
+    const cancel = () => {
+      if (topScrollFrame.current) window.cancelAnimationFrame(topScrollFrame.current);
+      finish();
+    };
+    topScrollCancel.current = cancel;
+    const step = (now: number) => {
+      if (interrupted) return finish();
+      const progress = Math.min(1, (now - startedAt) / duration);
+      // A gentle ease-out: the destination is clear immediately, without the
+      // abrupt final snap of the browser's default smooth-scroll timing.
+      const eased = 1 - Math.pow(1 - progress, 3);
+      window.scrollTo({ top: start * (1 - eased), behavior: "auto" });
+      if (progress < 1) topScrollFrame.current = window.requestAnimationFrame(step);
+      else finish();
+    };
+
+    topScrollFrame.current = window.requestAnimationFrame(step);
   };
 
   return (

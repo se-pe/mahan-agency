@@ -403,9 +403,9 @@ img { max-inline-size: 100%; display: block; }
    editorial gesture, then the promise and action quietly follow. No motion is
    attached to regular navigation. */
 @media (prefers-reduced-motion: no-preference) {
-  .hero__wordmark { animation: hero-mark-reveal 0.72s var(--settle) both; }
-  .hero__headline { animation: hero-copy-in 0.42s var(--settle) 0.22s both; }
-  .hero__credit { animation: hero-copy-in 0.36s var(--settle) 0.34s both; }
+  .hero__wordmark { animation: hero-mark-reveal 1.18s var(--settle) both; }
+  .hero__headline { animation: hero-copy-in 0.52s var(--settle) 0.54s both; }
+  .hero__credit { animation: hero-copy-in 0.44s var(--settle) 0.74s both; }
 }
 
 @keyframes hero-mark-reveal {
