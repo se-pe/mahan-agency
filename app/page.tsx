@@ -205,8 +205,8 @@ export default function Home() {
           <Flecks seed="mahan-hero" />
 
           <div className="hero-content">
-            <h1 id="hero-title" className="display hero__wordmark" aria-label="MAHAN">
-              <Condense text="MAHAN" />
+            <h1 id="hero-title" className="hero__wordmark" aria-label="MAHAN">
+              <img className="hero__logo" src="/mahan-logo.svg" alt="" />
             </h1>
             <p className="display hero__headline">
               An independent studio for brands that refuse to blend in.

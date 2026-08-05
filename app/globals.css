@@ -371,10 +371,15 @@ img { max-inline-size: 100%; display: block; }
 }
 
 .hero__wordmark {
-  font-size: clamp(76px, 19vw, 260px);
-  line-height: 0.76;
-  letter-spacing: -0.05em;
   position: relative;
+  margin: 0;
+  inline-size: min(100%, 1280px);
+}
+
+.hero__logo {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
 }
 
 .hero__headline {
@@ -700,7 +705,7 @@ a.precip__drop:focus-visible span { color: var(--cyan); }
 
   .project__go { inline-size: 52px; block-size: 52px; }
 
-  .hero__wordmark { letter-spacing: -0.04em; }
+  .hero__wordmark { inline-size: min(100%, 560px); }
   .case-grid { grid-template-columns:1fr; }.case-grid div,.case-grid div + div { padding:20px 0; border-inline-end:0; border-block-end:1.5px solid var(--ink); }
 }
 
