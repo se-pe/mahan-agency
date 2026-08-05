@@ -29,6 +29,56 @@
   font-display: swap;
 }
 
+/* Presentation font — replace these files with the licensed webfont package
+   before MAHAN's commercial launch. */
+@font-face {
+  font-family: "Neue Montreal";
+  src: url("/fonts/neue-montreal-light.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Montreal";
+  src: url("/fonts/neue-montreal-regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Montreal";
+  src: url("/fonts/neue-montreal-medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Montreal";
+  src: url("/fonts/neue-montreal-bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Montreal";
+  src: url("/fonts/neue-montreal-italic.otf") format("opentype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Montreal";
+  src: url("/fonts/neue-montreal-bold-italic.otf") format("opentype");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
 :root {
   /* MAHAN palette — sampled from the supplied colour study. */
   --storm: #fafaf8;
@@ -68,7 +118,7 @@ body {
   margin: 0;
   background: var(--storm);
   color: var(--ink);
-  font-family: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  font-family: "Neue Montreal", ui-sans-serif, system-ui, sans-serif;
   font-size: 17px;
   line-height: 1.5;
   font-synthesis-weight: none;
@@ -100,9 +150,8 @@ img { max-inline-size: 100%; display: block; }
    -------------------------------------------------------------------------- */
 
 .display {
-  font-family: "Bricolage", "Archivo", ui-sans-serif, sans-serif;
+  font-family: "Neue Montreal", ui-sans-serif, system-ui, sans-serif;
   font-weight: 700;
-  font-stretch: 90%;
   letter-spacing: -0.045em;
   line-height: 0.9;
   text-wrap: balance;
@@ -111,7 +160,7 @@ img { max-inline-size: 100%; display: block; }
 }
 
 .mark {
-  font-family: "Michroma", "Archivo", ui-sans-serif, sans-serif;
+  font-family: "Michroma", "Neue Montreal", ui-sans-serif, sans-serif;
   font-size: 12px;
   font-weight: 400;
   letter-spacing: 0.08em;
@@ -421,7 +470,7 @@ img { max-inline-size: 100%; display: block; }
 }
 
 .weather h3 {
-  font-family: "Bricolage", sans-serif;
+  font-family: "Neue Montreal", ui-sans-serif, system-ui, sans-serif;
   font-size: clamp(30px, 3.6vw, 52px);
   font-weight: 800;
   letter-spacing: -0.035em;
@@ -604,7 +653,7 @@ a.precip__drop:focus-visible span { color: var(--cyan); }
 }
 
 .studio__cols h3 {
-  font-family: "Bricolage", sans-serif;
+  font-family: "Neue Montreal", ui-sans-serif, system-ui, sans-serif;
   font-size: 20px;
   font-weight: 700;
   letter-spacing: -0.02em;

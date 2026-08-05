@@ -23,7 +23,8 @@ deliberate colour fields create an identity that is modern, minimal and human.
 
 OWN-WORLD: Quiet Matter. Black #050505, paper #FAFAF8, stone #939393, deep
 teal #3F8F91 and mist #C6D9DA. Teal and mist own complete regions; stone stays
-supporting information. Bricolage carries display, Archivo supports reading.
+supporting information. Neue Montreal carries the presentation typography;
+Michroma remains the signature face for small labels.
 
 STORY: A founder sees a studio with a point of view, understands that brand,
 space and digital are one weather rather than three suppliers, and can reach
