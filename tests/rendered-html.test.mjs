@@ -19,7 +19,7 @@ test("server-renders the MAHAN agency experience", async () => {
   assert.match(html, /<title>MAHAN — Brand, Space &amp; Digital, from one studio in Shiraz<\/title>/i);
   assert.match(html, /An independent studio/);
   assert.match(html, /Selected work/);
-  assert.match(html, /studio@mahan\.agency/);
+  assert.match(html, /Contact channels will be added before launch\./);
   assert.doesNotMatch(html, /codex-preview|Building your site|react-loading-skeleton/i);
 });
 

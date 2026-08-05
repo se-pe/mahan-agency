@@ -161,12 +161,12 @@ img { max-inline-size: 100%; display: block; }
 .settled .cond i {
   transform: none;
   opacity: 1;
-  transition: transform 0.7s var(--settle), opacity 0.5s var(--settle);
-  transition-delay: calc(var(--i) * 22ms);
+  transition: transform 0.46s var(--settle), opacity 0.34s var(--settle);
+  transition-delay: calc(var(--i) * 18ms);
 }
 
 /* Once the last letter has landed, drop the hint. */
-.settled .cond i {
+.motion-complete .cond i {
   will-change: auto;
 }
 
@@ -192,8 +192,8 @@ img { max-inline-size: 100%; display: block; }
 
 .settled .fleck {
   opacity: 0.42;
-  transition: opacity 1.1s var(--settle);
-  transition-delay: calc(0.45s + var(--i) * 60ms);
+  transition: opacity 0.62s var(--settle);
+  transition-delay: calc(0.3s + var(--i) * 40ms);
 }
 
 /* --------------------------------------------------------------------------
@@ -219,14 +219,11 @@ img { max-inline-size: 100%; display: block; }
     transform 0.22s var(--settle);
 }
 
-.stamp:hover,
 .stamp:focus-visible {
   background: var(--fg);
   color: var(--storm);
-  transform: translateY(-2px);
 }
 
-.field-ink .stamp:hover,
 .field-ink .stamp:focus-visible { color: var(--ink); }
 
 .stamp--filled {
@@ -236,11 +233,13 @@ img { max-inline-size: 100%; display: block; }
 
 .field-ink .stamp--filled { color: var(--ink); }
 
-.stamp--filled:hover,
 .stamp--filled:focus-visible {
   background: transparent;
   color: var(--fg);
 }
+
+.stamp:active { transform: scale(0.97); transition-duration: 120ms; }
+.stamp:focus-visible { transition-duration: 0ms; }
 
 :focus-visible {
   outline: 3px solid var(--focus);
@@ -297,8 +296,7 @@ img { max-inline-size: 100%; display: block; }
   transition: border-color 0.18s var(--settle);
 }
 
-.masthead__link:hover,
-.masthead__link:focus-visible { border-block-end-color: currentColor; }
+.masthead__link:focus-visible { border-block-end-color: currentColor; transition-duration: 0ms; }
 
 .masthead .stamp {
   min-block-size: 44px;
@@ -473,12 +471,10 @@ img { max-inline-size: 100%; display: block; }
     rotate 0.24s var(--settle);
 }
 
-.project:hover .project__go,
 .project:focus-visible .project__go {
   background: var(--cyan);
   color: var(--ink);
   border-color: var(--cyan);
-  rotate: 45deg;
 }
 
 /* The charge: a cyan wash rises behind the name on hover. Not colour alone —
@@ -487,14 +483,17 @@ img { max-inline-size: 100%; display: block; }
   position: absolute;
   inset-block-end: 0;
   inset-inline: 0;
-  block-size: 0;
+  block-size: 100%;
   background: var(--cyan-pale);
   z-index: 0;
-  transition: block-size 0.42s var(--settle);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.24s var(--settle);
 }
 
-.project:hover .project__wash,
-.project:focus-visible .project__wash { block-size: 100%; }
+.project:focus-visible .project__wash { transform: scaleY(1); transition-duration: 0ms; }
+.project:focus-visible .project__go { transition-duration: 0ms; }
+.project:active .project__go { transform: scale(0.95); }
 
 .project > *:not(.project__wash) { position: relative; z-index: 1; }
 
@@ -549,6 +548,8 @@ a.precip__drop:focus-visible {
 
 a.precip__drop:hover span,
 a.precip__drop:focus-visible span { color: var(--cyan); }
+
+.contact-pending { display: inline-flex; align-items: center; min-block-size: 60px; padding-inline: 18px; border: 2px dashed currentColor; }
 
 .precip__drop--open {
   color: var(--cyan-deep);
@@ -648,8 +649,11 @@ a.precip__drop:focus-visible span { color: var(--cyan); }
   border-block-end: 2px solid transparent;
 }
 
-.colophon a:hover,
-.colophon a:focus-visible { border-block-end-color: currentColor; }
+.colophon a:focus-visible { border-block-end-color: currentColor; transition-duration: 0ms; }
+
+.case-shell { min-block-size: 100svh; }.case-nav { display:flex; justify-content:space-between; align-items:center; gap:20px; padding:16px var(--gutter); border-block-end:1.5px solid var(--ink); }.case-hero { padding:clamp(80px,14vw,180px) var(--gutter); border-block-end:1.5px solid var(--ink); }.case-hero h1 { font-size:clamp(66px,14vw,190px); max-inline-size:12ch; margin:24px 0; }.case-summary { font-size:clamp(24px,3.4vw,48px); line-height:1.05; max-inline-size:22ch; margin:0; }.case-grid { display:grid; grid-template-columns:repeat(3,1fr); padding:0 var(--gutter); border-block-end:1.5px solid var(--ink); }.case-grid div { padding:22px 18px 30px 0; border-inline-end:1.5px solid var(--ink); }.case-grid div + div { padding-inline-start:18px; }.case-grid p { font-size:20px; margin:12px 0 0; }.case-note { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:24px; padding:clamp(56px,9vw,120px) var(--gutter); }.case-note .mark { max-inline-size:46ch; }
+
+@media (hover: hover) and (pointer: fine) { .stamp:hover { background:var(--fg); color:var(--storm); transform:translateY(-2px); }.field-ink .stamp:hover { color:var(--ink); }.stamp--filled:hover { background:transparent; color:var(--fg); }.masthead__link:hover,.colophon a:hover { border-block-end-color:currentColor; }.project:hover .project__go { background:var(--cyan); color:var(--ink); border-color:var(--cyan); rotate:45deg; }.project:hover .project__wash { transform:scaleY(1); } a.precip__drop:hover { background:var(--cyan-deep); color:var(--storm); border-color:var(--cyan-deep); } }
 
 /* A placeholder must look unfinished. Anything that looks finished ships. */
 .tbd {
@@ -673,6 +677,7 @@ a.precip__drop:focus-visible span { color: var(--cyan); }
   .project__go { inline-size: 52px; block-size: 52px; }
 
   .hero__wordmark { letter-spacing: -0.04em; }
+  .case-grid { grid-template-columns:1fr; }.case-grid div,.case-grid div + div { padding:20px 0; border-inline-end:0; border-block-end:1.5px solid var(--ink); }
 }
 
 @media (max-width: 620px) {

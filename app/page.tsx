@@ -1,6 +1,7 @@
 "use client";
 
 import { Fragment, useEffect, useRef, type CSSProperties } from "react";
+import { clientWork, contact, disciplines, projects, studioNotes } from "./content";
 
 /* ===========================================================================
    REPLACE BEFORE LAUNCH — everything in this block is placeholder.
@@ -22,69 +23,6 @@ import { Fragment, useEffect, useRef, type CSSProperties } from "react";
                           wordmark is ever redrawn.
    =========================================================================== */
 
-type Project = { name: string; discipline: string; year: string; tbd?: boolean };
-
-const PROJECTS: Project[] = [
-  { name: "Project one", discipline: "Brand", year: "Year", tbd: true },
-  { name: "Project two", discipline: "Space", year: "Year", tbd: true },
-  { name: "Project three", discipline: "Digital", year: "Year", tbd: true },
-  { name: "Project four", discipline: "Brand, Space", year: "Year", tbd: true },
-];
-
-const CLIENT_WORK = [
-  { name: "Client", discipline: "Brand" },
-  { name: "Client", discipline: "Digital" },
-  { name: "Client", discipline: "Space" },
-  { name: "Client", discipline: "Brand" },
-  { name: "Client", discipline: "Digital" },
-  { name: "Client", discipline: "Brand" },
-  { name: "Client", discipline: "Space" },
-  { name: "Client", discipline: "Digital" },
-  { name: "Client", discipline: "Brand" },
-  { name: "Client", discipline: "Space" },
-];
-
-const CONTACT = {
-  email: "studio@mahan.agency",
-  phoneLabel: "+98 71 0000 0000",
-  phoneHref: "tel:+987100000000",
-  whatsappHref: "https://wa.me/000000000000",
-  instagramHref: "https://instagram.com/",
-  tbd: true,
-};
-
-const DISCIPLINES = [
-  {
-    key: "Brand",
-    body: "Strategy, naming, identity systems and art direction — the argument a brand makes before anyone has walked in or clicked anything.",
-  },
-  {
-    key: "Space",
-    body: "Interiors, environments and signage. What a brand feels like at arm's length, in daylight, standing up.",
-  },
-  {
-    key: "Digital",
-    body: "Websites, commerce and digital products, built by the same people who drew the mark — so the screen agrees with the room.",
-  },
-];
-
-/* The studio band argues how the three disciplines run together. It must not
-   restate the discipline definitions above it — the same copy twice reads as
-   a paste, not an argument. */
-const STUDIO_NOTES = [
-  {
-    key: "In one order",
-    body: "The identity settles first, the room is drawn against it, and the screen is built last, because by then there is something true to build from.",
-  },
-  {
-    key: "No handoff",
-    body: "The people who draw the mark specify the room and write the site. Nothing has to survive translation between three suppliers who have never met.",
-  },
-  {
-    key: "Judged in use",
-    body: "The test is not the presentation. It is the room at seven in the evening and the site on a three-year-old phone.",
-  },
-];
 
 /* Deterministic scatter: identical on server and client, so the storm can
    never cause a hydration mismatch. Deliberately small — the word should
@@ -180,13 +118,17 @@ export default function Home() {
     const offscreen = nodes.filter((n) => n.getBoundingClientRect().top > fold);
     offscreen.forEach((n) => n.classList.add("armed"));
 
-    const settleAll = () => offscreen.forEach((n) => n.classList.add("settled"));
+    const settle = (node: HTMLElement) => {
+      node.classList.add("settled");
+      window.setTimeout(() => node.classList.add("motion-complete"), 760);
+    };
+    const settleAll = () => offscreen.forEach(settle);
 
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
           if (e.isIntersecting) {
-            e.target.classList.add("settled");
+            settle(e.target as HTMLElement);
             io.unobserve(e.target);
           }
         });
@@ -256,11 +198,7 @@ export default function Home() {
             <span className="mark hero__origin">
               Shiraz, Fars — brand, space &amp; digital
             </span>
-            <a className="stamp" href={CONTACT.whatsappHref}>
-              {CONTACT.tbd ? <Tbd>WhatsApp</Tbd> : "WhatsApp"}
-            </a>
-            <a className="stamp" href={CONTACT.phoneHref}>Phone</a>
-            <a className="stamp" href={`mailto:${CONTACT.email}`}>Email</a>
+            <a className="stamp" href="#contact">Start a project</a>
           </div>
         </section>
 
@@ -275,7 +213,7 @@ export default function Home() {
           </h2>
 
           <div className="weather">
-            {DISCIPLINES.map((d) => (
+            {disciplines.map((d) => (
               <div key={d.key}>
                 <h3 className="display">{d.key}</h3>
                 <p className="prose">{d.body}</p>
@@ -299,14 +237,13 @@ export default function Home() {
             <span className="mark">Four projects</span>
           </div>
 
-          {PROJECTS.map((project) => (
+          {projects.map((project) => (
             <a
               className="project"
-              href="#contact"
+              href={`/work/${project.slug}`}
               key={project.name}
-              ref={collect}
               aria-label={`${project.name} — ${project.discipline}, ${project.year}${
-                project.tbd ? " (details to supply)" : ""
+                project.status === "coming-soon" ? " (details to supply)" : ""
               }`}
             >
               <span className="project__wash" aria-hidden="true" />
@@ -317,7 +254,7 @@ export default function Home() {
                 <span className="project__meta">
                   <span className="mark">{project.discipline}</span>
                   <span className="mark">{project.year}</span>
-                  {project.tbd ? (
+                  {project.status === "coming-soon" ? (
                     <span className="mark">
                       <Tbd>To supply</Tbd>
                     </span>
@@ -356,10 +293,10 @@ export default function Home() {
           </div>
 
           <div className="precip__field">
-            {CLIENT_WORK.map((c, i) => (
+            {clientWork.map(([name, discipline], i) => (
               <span className="precip__drop" key={i}>
-                <Tbd>{c.name}</Tbd>
-                <span>{c.discipline}</span>
+                <Tbd>{name}</Tbd>
+                <span>{discipline}</span>
               </span>
             ))}
             <a className="precip__drop precip__drop--open" href="#contact">
@@ -377,7 +314,7 @@ export default function Home() {
           </h2>
 
           <div className="studio__cols">
-            {STUDIO_NOTES.map((n) => (
+            {studioNotes.map((n) => (
               <div key={n.key}>
                 <h3>{n.key}</h3>
                 <p>{n.body}</p>
@@ -397,15 +334,7 @@ export default function Home() {
           </h2>
 
           <div className="contact__channels">
-            <a className="stamp stamp--filled" href={CONTACT.whatsappHref}>
-              {CONTACT.tbd ? <Tbd>WhatsApp</Tbd> : "WhatsApp"}
-            </a>
-            <a className="stamp" href={CONTACT.phoneHref}>
-              {CONTACT.tbd ? <Tbd>{CONTACT.phoneLabel}</Tbd> : CONTACT.phoneLabel}
-            </a>
-            <a className="stamp" href={`mailto:${CONTACT.email}`}>
-              {CONTACT.tbd ? <Tbd>{CONTACT.email}</Tbd> : CONTACT.email}
-            </a>
+            {contact.ready ? <><a className="stamp stamp--filled" href={contact.whatsappHref}>WhatsApp</a><a className="stamp" href={contact.phoneHref}>{contact.phoneLabel}</a><a className="stamp" href={`mailto:${contact.email}`}>{contact.email}</a></> : <span className="contact-pending mark">Contact channels will be added before launch.</span>}
           </div>
 
           <p className="prose" style={{ marginBlockStart: "26px" }}>
@@ -417,9 +346,7 @@ export default function Home() {
             <span className="mark" style={{ alignSelf: "center" }}>
               Shiraz, Fars — working everywhere
             </span>
-            <a href={CONTACT.instagramHref} rel="noreferrer">
-              {CONTACT.tbd ? <Tbd>Instagram</Tbd> : "Instagram"}
-            </a>
+            {contact.ready ? <a href={contact.instagramHref} rel="noreferrer">Instagram</a> : null}
           </div>
         </section>
       </main>

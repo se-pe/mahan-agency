@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "MAHAN — Brand, Space & Digital, from one studio in Shiraz",
     description: "An independent studio for brands that refuse to blend in.",
-    images: [{ url: "/og.png", width: 1200, height: 630 }],
+    images: [{ url: "/og-v2.png", width: 1200, height: 630 }],
   },
 };
 
