@@ -24,19 +24,18 @@ import { clientWork, contact, disciplines, projects, studioNotes } from "./conte
    =========================================================================== */
 
 
-/* Deterministic scatter: identical on server and client, so the storm can
-   never cause a hydration mismatch. Deliberately small — the word should
-   shiver into place, not explode. Anything larger and the page is unreadable
-   for a second every time a band enters the viewport. */
+/* Deterministic scatter: identical on server and client, so the motion can
+   never cause a hydration mismatch. It is intentionally restrained — type
+   resolves into place rather than performing for the visitor. */
 function scatter(seed: string, i: number) {
   let h = 0;
   for (let k = 0; k < seed.length; k++) h = (h * 31 + seed.charCodeAt(k)) | 0;
   h = (h + i * 2654435761) | 0;
   const a = Math.abs(h);
   return {
-    tx: ((a % 56) - 28) / 100,
-    ty: (((a >> 7) % 48) - 24) / 100,
-    r: ((a >> 13) % 16) - 8,
+    tx: ((a % 32) - 16) / 100,
+    ty: (((a >> 7) % 28) - 14) / 100,
+    r: ((a >> 13) % 8) - 4,
   };
 }
 
@@ -71,25 +70,6 @@ function Condense({ text }: { text: string }) {
             <span className="cond-w">{letters}</span>
           </Fragment>
         );
-      })}
-    </span>
-  );
-}
-
-/* Spent grammar — what the storm leaves behind once a word has landed. */
-function Flecks({ seed, count = 8 }: { seed: string; count?: number }) {
-  return (
-    <span className="flecks" aria-hidden="true">
-      {Array.from({ length: count }).map((_, i) => {
-        const { tx, ty, r } = scatter(seed, i + 97);
-        const style = {
-          "--x": `${(50 + tx * 155).toFixed(1)}%`,
-          "--y": `${(50 + ty * 170).toFixed(1)}%`,
-          "--s": `${3 + (i % 4) * 2}px`,
-          "--r": `${r * 3}deg`,
-          "--i": i,
-        } as CSSProperties;
-        return <i className="fleck" key={i} style={style} />;
       })}
     </span>
   );
@@ -202,8 +182,6 @@ export default function Home() {
           ref={collect}
           aria-labelledby="hero-title"
         >
-          <Flecks seed="mahan-hero" />
-
           <div className="hero-content">
             <h1 id="hero-title" className="hero__wordmark" aria-label="MAHAN">
               <img className="hero__logo" src="/mahan-logo.svg" alt="" />
