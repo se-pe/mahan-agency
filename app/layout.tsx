@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://mahan-creative-shiraz.gamestgamer77.chatgpt.site"),
   title: "MAHAN — Brand, Space & Digital, from one studio in Shiraz",
   description:
     "MAHAN is an independent creative studio in Shiraz. We do identity, environments and digital for the same client, so the mark, the room and the screen agree with each other.",
@@ -10,6 +11,12 @@ export const metadata: Metadata = {
     title: "MAHAN — Brand, Space & Digital, from one studio in Shiraz",
     description: "An independent studio for brands that refuse to blend in.",
     images: [{ url: "/og-v3.png", width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "MAHAN — Brand, Space & Digital, from one studio in Shiraz",
+    description: "An independent studio for brands that refuse to blend in.",
+    images: ["/og-v3.png"],
   },
 };
 
