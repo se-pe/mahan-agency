@@ -186,7 +186,7 @@ export default function Home() {
 
       <header className="masthead" data-scrolled={hasScrolled || undefined}>
         <a className="masthead__wordmark" href="#top" aria-label="MAHAN — home">
-          MAHAN
+          <img className="brand-logo" src="/mahan-logo.svg" alt="" />
         </a>
         <nav className="masthead__nav" aria-label="Primary">
           <a className="masthead__link" href="#work">Work</a>
@@ -371,7 +371,9 @@ export default function Home() {
       </main>
 
       <footer className="colophon field-ink">
-        <a className="masthead__wordmark" href="#top">MAHAN</a>
+        <a className="masthead__wordmark" href="#top" aria-label="MAHAN — home">
+          <img className="brand-logo" src="/mahan-logo.svg" alt="" />
+        </a>
         <span className="mark">© 2026 MAHAN Creative Studio</span>
         <a className="mark" href="#top">Back to top</a>
       </footer>

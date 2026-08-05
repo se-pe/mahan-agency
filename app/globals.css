@@ -22,6 +22,13 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Michroma";
+  src: url("/fonts/michroma-regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+
 :root {
   /* MAHAN palette — sampled from the supplied colour study. */
   --storm: #fafaf8;
@@ -104,9 +111,10 @@ img { max-inline-size: 100%; display: block; }
 }
 
 .mark {
+  font-family: "Michroma", "Archivo", ui-sans-serif, sans-serif;
   font-size: 12px;
-  font-weight: 650;
-  letter-spacing: 0.14em;
+  font-weight: 400;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   line-height: 1.35;
   font-variant-numeric: tabular-nums;
@@ -278,15 +286,19 @@ img { max-inline-size: 100%; display: block; }
 }
 
 .masthead__wordmark {
-  font-family: "Bricolage", sans-serif;
-  font-weight: 800;
-  font-size: 25px;
-  letter-spacing: -0.03em;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   min-block-size: 44px;
 }
+
+.brand-logo {
+  display: block;
+  inline-size: 104px;
+  block-size: auto;
+}
+
+.field-ink .brand-logo { filter: invert(1); }
 
 .masthead__nav {
   display: flex;
@@ -700,7 +712,7 @@ a.precip__drop:focus-visible span { color: var(--cyan); }
     gap: 8px;
   }
 
-  .masthead__wordmark { font-size: 21px; }
+  .brand-logo { inline-size: 88px; }
 
   .masthead__nav { gap: 2px; }
 
