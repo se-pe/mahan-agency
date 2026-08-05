@@ -1,6 +1,7 @@
 "use client";
 
 import { Fragment, useEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react";
+import { BUILDER_CONTENT_MODEL, builder } from "./builder";
 import { clientWork, contact, disciplines, projects, studioNotes } from "./content";
 
 /* ===========================================================================
@@ -79,11 +80,43 @@ function Tbd({ children }: { children: React.ReactNode }) {
   return <span className="tbd">{children}</span>;
 }
 
+type CmsCopy = Partial<{
+  heroHeadline: string;
+  heroLocation: string;
+  imprintFirst: string;
+  imprintSecond: string;
+  imprintNote: string;
+  workTitle: string;
+  workCount: string;
+  precipTitle: string;
+  precipNote: string;
+  studioStatement: string;
+  contactTitle: string;
+  contactNote: string;
+  contactLocation: string;
+  footerCopyright: string;
+}>;
+
 export default function Home() {
   const bands = useRef<HTMLElement[]>([]);
   const topScrollFrame = useRef<number | null>(null);
   const topScrollCancel = useRef<(() => void) | null>(null);
   const [hasScrolled, setHasScrolled] = useState(false);
+  const [cmsCopy, setCmsCopy] = useState<CmsCopy>({});
+
+  const copy = <K extends keyof CmsCopy>(key: K, fallback: string) =>
+    cmsCopy[key]?.trim() || fallback;
+
+  useEffect(() => {
+    // Once the MAHAN Content entry is created in Builder, published values load
+    // here. In Builder's preview iframe this same subscription receives draft
+    // updates, while the local copy remains a reliable fallback before then.
+    const subscription = builder
+      .get(BUILDER_CONTENT_MODEL, { userAttributes: { urlPath: "/" } })
+      .subscribe((entry) => setCmsCopy((entry?.data?.copy ?? entry?.data ?? {}) as CmsCopy));
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   useEffect(() => {
     let frame = 0;
@@ -232,13 +265,13 @@ export default function Home() {
               <img className="hero__logo" src="/mahan-logo-hero.svg" alt="" />
             </h1>
             <p className="display hero__headline">
-              An independent studio for brands that refuse to blend in.
+              {copy("heroHeadline", "An independent studio for brands that refuse to blend in.")}
             </p>
           </div>
 
           <div className="hero__credit hero-content">
             <span className="mark hero__origin">
-              Shiraz, Fars — brand, space &amp; digital
+              {copy("heroLocation", "Shiraz, Fars — brand, space & digital")}
             </span>
             <a className="stamp" href="#contact">Start a project</a>
           </div>
@@ -249,9 +282,9 @@ export default function Home() {
           <h2
             id="imprint-title"
             className="display imprint__lede"
-            aria-label="One storm. Three words."
+            aria-label={`${copy("imprintFirst", "One storm.")} ${copy("imprintSecond", "Three words.")}`}
           >
-            <Condense text="One storm." /> <Condense text="Three words." />
+            <Condense text={copy("imprintFirst", "One storm.")} /> <Condense text={copy("imprintSecond", "Three words.")} />
           </h2>
 
           <div className="weather">
@@ -264,9 +297,7 @@ export default function Home() {
           </div>
 
           <p className="imprint__note">
-            Most studios can give you one of these. Commission three of them from
-            three suppliers and you get three different weathers. We run all
-            three, so they arrive as one.
+            {copy("imprintNote", "Most studios can give you one of these. Commission three of them from three suppliers and you get three different weathers. We run all three, so they arrive as one.")}
           </p>
         </section>
 
@@ -274,9 +305,9 @@ export default function Home() {
         <section id="work" className="field-storm" aria-labelledby="work-title">
           <div className="work__head">
             <h2 id="work-title" className="display" style={{ fontSize: "clamp(34px, 5vw, 68px)" }}>
-              Selected work
+              {copy("workTitle", "Selected work")}
             </h2>
-            <span className="mark">Four projects</span>
+            <span className="mark">{copy("workCount", "Four projects")}</span>
           </div>
 
           {projects.map((project) => (
@@ -324,13 +355,12 @@ export default function Home() {
               id="precip-title"
               className="display"
               style={{ fontSize: "clamp(30px, 4.4vw, 58px)" }}
-              aria-label="What else has landed"
+              aria-label={copy("precipTitle", "What else has landed")}
             >
-              <Condense text="What else has landed" />
+              <Condense text={copy("precipTitle", "What else has landed")} />
             </h2>
             <p className="mark" style={{ maxInlineSize: "32ch" }}>
-              Shorter engagements, ongoing clients, and work that never needed a
-              case study.
+              {copy("precipNote", "Shorter engagements, ongoing clients, and work that never needed a case study.")}
             </p>
           </div>
 
@@ -351,8 +381,7 @@ export default function Home() {
         {/* -------------------------------------------------------- STUDIO */}
         <section id="studio" className="band field-ink" ref={collect} aria-labelledby="studio-title">
           <h2 id="studio-title" className="display studio__statement">
-            A small studio in Shiraz that would rather do three things for one
-            client than one thing for thirty.
+            {copy("studioStatement", "A small studio in Shiraz that would rather do three things for one client than one thing for thirty.")}
           </h2>
 
           <div className="studio__cols">
@@ -370,9 +399,9 @@ export default function Home() {
           <h2
             id="contact-title"
             className="display contact__lede"
-            aria-label="Tell us what you're building."
+            aria-label={copy("contactTitle", "Tell us what you're building.")}
           >
-            <Condense text="Tell us what you're building." />
+            <Condense text={copy("contactTitle", "Tell us what you're building.")} />
           </h2>
 
           <div className="contact__channels">
@@ -380,13 +409,12 @@ export default function Home() {
           </div>
 
           <p className="prose" style={{ marginBlockStart: "26px" }}>
-            Send the shape of it — the brand, the room, the site, or all three.
-            Every enquiry is answered by the people who would do the work.
+            {copy("contactNote", "Send the shape of it — the brand, the room, the site, or all three. Every enquiry is answered by the people who would do the work.")}
           </p>
 
           <div className="contact__detail">
             <span className="mark" style={{ alignSelf: "center" }}>
-              Shiraz, Fars — working everywhere
+              {copy("contactLocation", "Shiraz, Fars — working everywhere")}
             </span>
             {contact.ready ? <a href={contact.instagramHref} rel="noreferrer">Instagram</a> : null}
           </div>
@@ -397,7 +425,7 @@ export default function Home() {
         <a className="masthead__wordmark" href="#top" aria-label="MAHAN — home">
           <img className="brand-logo" src="/mahan-logo.svg" alt="" />
         </a>
-        <span className="mark">© 2026 MAHAN Creative Studio</span>
+        <span className="mark">{copy("footerCopyright", "© 2026 MAHAN Creative Studio")}</span>
         <a className="mark" href="#top" onClick={scrollToTop}>Back to top</a>
       </footer>
     </>
