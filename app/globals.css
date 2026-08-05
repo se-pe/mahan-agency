@@ -236,42 +236,36 @@ img { max-inline-size: 100%; display: block; }
 .stamp {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
+  gap: 14px;
   min-block-size: var(--stamp-h);
-  padding-inline: 20px;
-  border: 2px solid currentColor;
+  padding: 4px 0 10px;
+  border: 0;
+  border-block-end: 2px solid currentColor;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   text-decoration: none;
   background: transparent;
   color: inherit;
   cursor: pointer;
-  transition: background-color 0.22s var(--settle), color 0.22s var(--settle),
-    transform 0.22s var(--settle);
+  transition: border-color 0.18s var(--settle);
+}
+
+.stamp::after {
+  content: "↗";
+  font-size: 1.55em;
+  font-weight: 400;
+  line-height: 0;
+  transition: transform 0.18s var(--settle);
 }
 
 .stamp:focus-visible {
-  background: var(--fg);
-  color: var(--storm);
+  outline: 3px solid var(--focus);
+  outline-offset: 5px;
 }
 
-.field-ink .stamp:focus-visible { color: var(--ink); }
-
-.stamp--filled {
-  background: var(--fg);
-  color: var(--storm);
-}
-
-.field-ink .stamp--filled { color: var(--ink); }
-
-.stamp--filled:focus-visible {
-  background: transparent;
-  color: var(--fg);
-}
-
-.stamp:active { transform: scale(0.97); transition: transform 120ms var(--settle); }
+.stamp:active { opacity: 0.7; }
 .stamp:focus-visible { transition-duration: 0ms; }
 
 :focus-visible {
@@ -347,7 +341,7 @@ img { max-inline-size: 100%; display: block; }
 
 .masthead .stamp {
   min-block-size: 44px;
-  padding-inline: 15px;
+  padding-block: 4px 8px;
   font-size: 12px;
 }
 
@@ -677,7 +671,7 @@ a.precip__drop:focus-visible span { color: var(--cyan); }
 }
 
 .contact__channels .stamp {
-  min-block-size: 60px;
+  min-block-size: 48px;
   font-size: 14px;
 }
 
@@ -725,7 +719,7 @@ a.precip__drop:focus-visible span { color: var(--cyan); }
 
 .case-shell { min-block-size: 100svh; }.case-nav { display:flex; justify-content:space-between; align-items:center; gap:20px; padding:16px var(--gutter); border-block-end:1.5px solid var(--ink); }.case-hero { padding:clamp(80px,14vw,180px) var(--gutter); border-block-end:1.5px solid var(--ink); }.case-hero h1 { font-size:clamp(66px,14vw,190px); max-inline-size:12ch; margin:24px 0; }.case-summary { font-size:clamp(24px,3.4vw,48px); line-height:1.05; max-inline-size:22ch; margin:0; }.case-grid { display:grid; grid-template-columns:repeat(3,1fr); padding:0 var(--gutter); border-block-end:1.5px solid var(--ink); }.case-grid div { padding:22px 18px 30px 0; border-inline-end:1.5px solid var(--ink); }.case-grid div + div { padding-inline-start:18px; }.case-grid p { font-size:20px; margin:12px 0 0; }.case-note { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:24px; padding:clamp(56px,9vw,120px) var(--gutter); }.case-note .mark { max-inline-size:46ch; }
 
-@media (hover: hover) and (pointer: fine) { .stamp:hover { background:var(--fg); color:var(--storm); transform:translateY(-2px); }.field-ink .stamp:hover { color:var(--ink); }.stamp--filled:hover { background:transparent; color:var(--fg); }.masthead__link:hover,.colophon a:hover { border-block-end-color:currentColor; }.project:hover .project__name { transform:translateX(10px); }.project:hover .project__go { background:var(--cyan); color:var(--ink); border-color:var(--cyan); rotate:45deg; }.project:hover .project__wash { transform:scaleY(1); } a.precip__drop:hover { background:var(--cyan-deep); color:var(--storm); border-color:var(--cyan-deep); } }
+@media (hover: hover) and (pointer: fine) { .stamp:hover::after { transform:translate(4px,-4px); }.masthead__link:hover,.colophon a:hover { border-block-end-color:currentColor; }.project:hover .project__name { transform:translateX(10px); }.project:hover .project__go { background:var(--cyan); color:var(--ink); border-color:var(--cyan); rotate:45deg; }.project:hover .project__wash { transform:scaleY(1); } a.precip__drop:hover { background:var(--cyan-deep); color:var(--storm); border-color:var(--cyan-deep); } }
 
 /* A placeholder must look unfinished. Anything that looks finished ships. */
 .tbd {
@@ -832,4 +826,6 @@ a.precip__drop:focus-visible span { color: var(--cyan); }
   .stamp,
   .project__go,
   .contact-pending { border-width: 3px; }
+
+  .stamp { border-block-end-width: 3px; }
 }
