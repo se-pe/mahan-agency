@@ -1,8 +1,7 @@
 /* ==========================================================================
-   MAHAN — Alphabet Storm
-   Letters behave as matter. Words condense out of scattered type, hold, and
-   the storm moves on. Storm white ground, ink as mass, cyan as the charged
-   state — owning whole regions, never sprinkled as an accent.
+   MAHAN — Quiet Matter
+   A restrained material palette: ink, paper, teal, mist and stone. The
+   animation stays deliberately small; colour and proportion do the work.
    Logical properties throughout so the Persian RTL phase is a translation,
    not a rebuild.
    ========================================================================== */
@@ -24,15 +23,15 @@
 }
 
 :root {
-  --storm: #f2f4f5;
-  --ink: #0b0c0d;
-  --cyan: #2ad4d4;
-  --cyan-pale: #d4f5f4;
-  --cyan-deep: #0a5f63;
-  --cyan-dim: #124a4c;
-  --slate: #42494d;
-  /* Decorative particles only — 2.70:1 on storm, never permitted to carry text. */
-  --silver: #8e979b;
+  /* MAHAN palette — sampled from the supplied colour study. */
+  --storm: #fafaf8;
+  --ink: #050505;
+  --cyan: #3f8f91;
+  --cyan-pale: #c6d9da;
+  --cyan-deep: #246f71;
+  --cyan-dim: #1b5658;
+  --slate: #777777;
+  --silver: #939393;
 
   --fg: var(--ink);
   --fg-dim: var(--slate);
@@ -82,10 +81,10 @@ img { max-inline-size: 100%; display: block; }
    -------------------------------------------------------------------------- */
 
 .field-storm { background: var(--storm);     --fg: var(--ink);   --fg-dim: var(--slate);  --focus: var(--cyan-deep); }
-.field-cyan  { background: var(--cyan);      --fg: var(--ink);   --fg-dim: var(--cyan-dim); --focus: var(--ink); }
-.field-pale  { background: var(--cyan-pale); --fg: var(--ink);   --fg-dim: var(--cyan-deep); --focus: var(--cyan-deep); }
+.field-cyan  { background: var(--cyan);      --fg: var(--storm); --fg-dim: var(--cyan-pale); --focus: var(--ink); }
+.field-pale  { background: var(--cyan-pale); --fg: var(--ink);   --fg-dim: var(--cyan-dim); --focus: var(--cyan-deep); }
 /* --fg-dim here is NOT --silver: silver is flecks only, never text. */
-.field-ink   { background: var(--ink);       --fg: var(--storm); --fg-dim: #b9c1c4;       --focus: var(--cyan); }
+.field-ink   { background: var(--ink);       --fg: var(--storm); --fg-dim: var(--cyan-pale); --focus: var(--cyan); }
 
 [class*="field-"] { color: var(--fg); }
 
@@ -95,9 +94,10 @@ img { max-inline-size: 100%; display: block; }
 
 .display {
   font-family: "Bricolage", "Archivo", ui-sans-serif, sans-serif;
-  font-weight: 800;
-  letter-spacing: -0.035em;
-  line-height: 0.88;
+  font-weight: 700;
+  font-stretch: 90%;
+  letter-spacing: -0.045em;
+  line-height: 0.9;
   text-wrap: balance;
   margin: 0;
   font-optical-sizing: auto;

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "MAHAN — Brand, Space & Digital, from one studio in Shiraz",
     description: "An independent studio for brands that refuse to blend in.",
-    images: [{ url: "/og-v2.png", width: 1200, height: 630 }],
+    images: [{ url: "/og-v3.png", width: 1200, height: 630 }],
   },
 };
 
@@ -18,26 +18,22 @@ export const metadata: Metadata = {
 const CONTRACT = `<!--
 IMPECCABLE DIRECTION CONTRACT — client-pinned, overrides seed f69bd24a
 
-THESIS: Letters are matter. Every name on this site condenses out of scattered
-type, holds, and lets the storm move on. Refuses the editorial-studio index:
-warm paper, hairline rules, serif display, numbered rows with hover previews.
+THESIS: MAHAN is quiet material confidence. Large type, clear wayfinding and
+deliberate colour fields create an identity that is modern, minimal and human.
 
-OWN-WORLD: Alphabet Storm. Cold storm white ground, ink as mass, one monumental
-grotesk (Bricolage) doing the structural work, Archivo for marks. Cyan #2AD4D4 —
-the client's own colour — owns whole regions rather than accenting them: the
-imprint and contact bands are cyan edge to edge. Silver is decorative flecks
-only, never text. No photography required; self-hosted fonts.
+OWN-WORLD: Quiet Matter. Black #050505, paper #FAFAF8, stone #939393, deep
+teal #3F8F91 and mist #C6D9DA. Teal and mist own complete regions; stone stays
+supporting information. Bricolage carries display, Archivo supports reading.
 
 STORY: A founder sees a studio with a point of view, understands that brand,
 space and digital are one weather rather than three suppliers, and can reach
 WhatsApp from any scroll position.
 
-FIRST VIEWPORT: Storm white. MAHAN at 19vw condensing from scattered, rotated
-glyphs into register, headline beneath, and a credit rule carrying WhatsApp,
-Phone and Email above the fold.
+FIRST VIEWPORT: Paper. MAHAN at 19vw with a focused headline beneath and a
+credit rule carrying the studio origin and project action above the fold.
 
-FORM: Word-as-weather-event. Client-pinned direction; a pinned brief beats the
-roll, and the rolled Kanoon Poster world was discarded at the client's request.
+FORM: Clear, minimal and tactile. Colour is spatial rather than decorative;
+motion gives feedback but never competes with the work.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish
 review, the verdict, and DESIGN.md
