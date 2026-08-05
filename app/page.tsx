@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useEffect, useRef, type CSSProperties } from "react";
+import { Fragment, useEffect, useRef, useState, type CSSProperties } from "react";
 import { clientWork, contact, disciplines, projects, studioNotes } from "./content";
 
 /* ===========================================================================
@@ -101,6 +101,25 @@ function Tbd({ children }: { children: React.ReactNode }) {
 
 export default function Home() {
   const bands = useRef<HTMLElement[]>([]);
+  const [hasScrolled, setHasScrolled] = useState(false);
+
+  useEffect(() => {
+    let frame = 0;
+    const updateChrome = () => {
+      frame = 0;
+      setHasScrolled(window.scrollY > 12);
+    };
+    const onScroll = () => {
+      if (!frame) frame = window.requestAnimationFrame(updateChrome);
+    };
+
+    updateChrome();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, []);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -165,7 +184,7 @@ export default function Home() {
         Skip to the work
       </a>
 
-      <header className="masthead">
+      <header className="masthead" data-scrolled={hasScrolled || undefined}>
         <a className="masthead__wordmark" href="#top" aria-label="MAHAN — home">
           MAHAN
         </a>
